@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import Layout from './pages/Layout'
+import Home from './pages/Home'
 
-function App() {
+const About = React.lazy(() => import("./pages/About"));
+const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route
+            path="about"
+            element={
+              <React.Suspense fallback={<>...</>}>
+                <About />
+              </React.Suspense>
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <React.Suspense fallback={<>...</>}>
+                <Dashboard />
+              </React.Suspense>
+            }
+          />
+          <Route path="*" element={<NoMatch />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
 
-export default App;
+
+function NoMatch() {
+  return (
+    <div>
+      <h2>Nothing to see here!</h2>
+      <p>
+        <Link to="/">Go to the home page</Link>
+      </p>
+    </div>
+  );
+}
